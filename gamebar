@@ -1,0 +1,57 @@
+# Configurações do Registro
+$regContent = @"
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\Software\Microsoft\GameBar]
+"ShowStartupPanel"=dword:00000000
+"GamePanelStartupTipIndex"=dword:00000003
+"AllowAutoGameMode"=dword:00000001
+"AutoGameModeEnabled"=dword:00000000
+"UseNexusForGameBarEnabled"=dword:00000000
+
+[HKEY_CURRENT_USER\System\GameConfigStore]
+"GameDVR_Enabled"=dword:00000000
+"GameDVR_FSEBehaviorMode"=dword:00000002
+"GameDVR_FSEBehavior"=dword:00000002
+"GameDVR_HonorUserFSEBehaviorMode"=dword:00000001
+"GameDVR_DXGIHonorFSEWindowsCompatible"=dword:00000001
+"GameDVR_EFSEFeatureFlags"=dword:00000000
+"GameDVR_DSEBehavior"=dword:00000002
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\GameDVR]
+"AllowGameDVR"=dword:00000000
+
+[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR]
+"AppCaptureEnabled"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\gtavlauncher.exe\PerfOptions]
+"CpuPriorityClass"=dword:00000005
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\subprocess.exe\PerfOptions]
+"CpuPriorityClass"=dword:00000005
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\GTA5.exe\PerfOptions]
+"CpuPriorityClass"=dword:00000003
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management]
+"FeatureSettingsOverride"=dword:00000003
+"FeatureSettingsOverrideMask"=dword:00000003
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\ApplicationManagement\AllowGameDVR]
+"value"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling]
+"PowerThrottlingOff"=dword:00000001
+"@
+
+# Caminho do arquivo .reg temporário
+$regFilePath = [System.IO.Path]::Combine($env:TEMP, 'game_settings.reg')
+
+# Salva o conteúdo no arquivo .reg
+$regContent | Set-Content -Path $regFilePath -Force
+
+# Executa o arquivo .reg usando regedit.exe
+Start-Process "regedit.exe" -ArgumentList "/s `"$regFilePath`"" -Wait
+
+# Remove o arquivo .reg temporário após a execução
+Remove-Item -Path $regFilePath -Force
